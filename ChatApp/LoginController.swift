@@ -48,10 +48,18 @@ class LoginController: UIViewController {
                 return
             }
             
+            guard let uid = user?.user.uid else {
+                return
+            }
+            
             //successfully authenticated user. Save user to database
             let ref = Database.database().reference(fromURL: "https://chatapp-3df90.firebaseio.com/")
+            
+            //creating child reference
+            let userReference = ref.child("users").child(uid)
+            
             let values = ["name": name, "email": email]
-            ref.updateChildValues(values, withCompletionBlock: { (err, ref) in
+            userReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
                 
                 if err != nil {
                     print(err)
