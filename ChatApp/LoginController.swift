@@ -30,7 +30,7 @@ class LoginController: UIViewController {
         button.setTitleColor(UIColor.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         
-        button.addTarget(self, action: #selector(handleRegister), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleLoginRegister), for: .touchUpInside)
         
         return button
     }()
@@ -65,10 +65,37 @@ class LoginController: UIViewController {
                     print(err)
                     return
                 }
-                
+                //dismiss the view controller when the user is successfully logged in
                 print("Saved to DB!!")
+                self.dismiss(animated: true, completion: nil)
             })
         })
+    }
+    
+    @objc func handleLoginRegister() {
+        //decide whether to login or register the user
+        if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {
+            handleLogin()
+        } else {
+            handleRegister()
+        }
+    }
+    
+    func handleLogin() {
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            print("invalid form")
+            return
+        }
+        
+        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
+            if error != nil {
+                print(error)
+                return
+            }
+            
+            //successfully logged in user.
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     let nameTextField: UITextField = {
@@ -146,6 +173,7 @@ class LoginController: UIViewController {
         passwordTextFieldHeightAnchor = passwordTextField.heightAnchor.constraint(equalTo: inputsContainerView.heightAnchor, multiplier: loginRegisterSegmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/3)
         passwordTextFieldHeightAnchor?.isActive = true
     }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
