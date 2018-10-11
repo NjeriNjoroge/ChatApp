@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 class LoginController: UIViewController {
     
@@ -26,8 +29,42 @@ class LoginController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(UIColor.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        
+        button.addTarget(self, action: #selector(handleRegister), for: .touchUpInside)
+        
         return button
     }()
+    
+    //authenticating user
+    @objc func handleRegister() {
+        guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else {
+            print("invalid form")
+            return
+        }
+        Auth.auth().createUser(withEmail: email, password: password, completion: { (user , error) in
+            
+            if error != nil {
+                print(error)
+                return
+            }
+            
+            //successfully authenticated user. Save user to database
+            let ref = Database.database().reference(fromURL: "https://chatapp-3df90.firebaseio.com/")
+            let values = ["name": name, "email": email]
+            ref.updateChildValues(values, withCompletionBlock: { (err, ref) in
+                
+                if err != nil {
+                    print(err)
+                    return
+                }
+                
+                print("Saved to DB!!")
+            })
+
+            
+        })
+
+    }
     
     let nameTextField: UITextField = {
         let tf = UITextField()
@@ -60,6 +97,7 @@ class LoginController: UIViewController {
     let passwordTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Password"
+        tf.isSecureTextEntry = true
         tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
