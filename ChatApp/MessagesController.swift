@@ -9,9 +9,10 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import FirebaseDatabase
 
 
-class ViewController: UITableViewController {
+class MessagesController: UITableViewController {
     
    
 
@@ -20,12 +21,25 @@ class ViewController: UITableViewController {
       
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
+        checkIfUserIsLoggedIn()
+    }
+    
+    func checkIfUserIsLoggedIn() {
         //user not logged in
         if Auth.auth().currentUser?.uid == nil {
             //handle the warning of presenting too many controllers when the app is starting. Gives it a slight delay
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
+        } else {
+            let uid = Auth.auth().currentUser?.uid
+            Database.database().reference().child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    self.navigationItem.title = dictionary["name"] as? String
+                }
+           
+            }, withCancel: nil)
+            }
         }
-    }
     
     @objc func handleLogout() {
         
@@ -34,12 +48,10 @@ class ViewController: UITableViewController {
         } catch let logoutError {
             print(logoutError)
         }
-        
-        
+
         let loginController = LoginController()
         present(loginController, animated: true, completion: nil)
     }
-
-
+    
 }
 

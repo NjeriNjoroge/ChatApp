@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //code after removing the main storyboard
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        window?.rootViewController = UINavigationController(rootViewController: ViewController())
+        window?.rootViewController = UINavigationController(rootViewController: MessagesController())
         
         FirebaseApp.configure()
         
