@@ -68,12 +68,11 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             
             //successfully authenticated user. Save user to database
 
-         /*creating a unique ID for each
-             image*/
+         /*creating a unique ID for each image*/
             let imageName = NSUUID().uuidString
             
             //upload users image to Firebase
-            let storageRef = Storage.storage().reference().child("image.png")
+            let storageRef = Storage.storage().reference().child("\(imageName).png")
             
             //create binary data to upload to storage. Firebase requires the binary data: PS metadata is the description of the file you are uploading
             if let uploadData = self.profileImageView.image!.pngData() {
