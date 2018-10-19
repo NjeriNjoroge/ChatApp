@@ -88,11 +88,13 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                     storageRef.downloadURL(completion: { (url, error) in
                         if error != nil {
                             print(error)
-                        } else {
-                            let downloadURL = url
-                            let values = ["name": name, "email": email, "profileImageUrl": downloadURL] as [String : Any]
-                             self.registerUserIntoDatabaseWithUID(uid: uid, values: values as [String : AnyObject])
                         }
+    
+                        let downloadURL = url?.absoluteString
+                        let values = ["name": name, "email": email, "profileImageUrl": downloadURL] as [String : Any]
+                        self.registerUserIntoDatabaseWithUID(uid: uid, values: values as [String : AnyObject])
+                       
+                
                     })
 
                     
