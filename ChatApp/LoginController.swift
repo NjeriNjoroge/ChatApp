@@ -35,43 +35,6 @@ class LoginController: UIViewController {
         return button
     }()
     
-    //authenticating user
-    @objc func handleRegister() {
-        guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else {
-            print("invalid form")
-            return
-        }
-        Auth.auth().createUser(withEmail: email, password: password, completion: { (user , error) in
-            
-            if error != nil {
-                print(error)
-                return
-            }
-            
-            guard let uid = user?.user.uid else {
-                return
-            }
-            
-            //successfully authenticated user. Save user to database
-            let ref = Database.database().reference(fromURL: "https://chatapp-3df90.firebaseio.com/")
-            
-            //creating child reference
-            let userReference = ref.child("users").child(uid)
-            
-            let values = ["name": name, "email": email]
-            userReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
-                
-                if err != nil {
-                    print(err)
-                    return
-                }
-                //dismiss the view controller when the user is successfully logged in
-                print("Saved to DB!!")
-                self.dismiss(animated: true, completion: nil)
-            })
-        })
-    }
-    
     @objc func handleLoginRegister() {
         //decide whether to login or register the user
         if loginRegisterSegmentedControl.selectedSegmentIndex == 0 {

@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
+import FirebaseStorage
 
 
 extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -19,7 +22,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         print(123)
     }
     
-    //
+    //selecting image
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         //capture the edited or original image
@@ -45,4 +48,84 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
         dismiss(animated: true, completion: nil)
         print("cancelled")
     }
+    
+    //authenticating user
+    @objc func handleRegister() {
+        guard let email = emailTextField.text, let password = passwordTextField.text, let name = nameTextField.text else {
+            print("invalid form")
+            return
+        }
+        Auth.auth().createUser(withEmail: email, password: password, completion: { (user , error) in
+            
+            if error != nil {
+                print(error)
+                return
+            }
+            
+            guard let uid = user?.user.uid else {
+                return
+            }
+            
+            //successfully authenticated user. Save user to database
+
+         /*creating a unique ID for each
+             image*/
+            let imageName = NSUUID().uuidString
+            
+            //upload users image to Firebase
+            let storageRef = Storage.storage().reference().child("image.png")
+            
+            //create binary data to upload to storage. Firebase requires the binary data: PS metadata is the description of the file you are uploading
+            if let uploadData = self.profileImageView.image!.pngData() {
+                
+                storageRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+                    
+                    if error != nil {
+                        print(error)
+                        return
+                    }
+                    
+                    storageRef.downloadURL(completion: { (url, error) in
+                        if error != nil {
+                            print(error)
+                        } else {
+                            let downloadURL = url
+                            let values = ["name": name, "email": email, "profileImageUrl": downloadURL] as [String : Any]
+                             self.registerUserIntoDatabaseWithUID(uid: uid, values: values as [String : AnyObject])
+                        }
+                    })
+
+                    
+                   
+                    
+                })
+                
+            }
+
+        })
+    }
+    
+    
+    private func registerUserIntoDatabaseWithUID(uid: String, values: [String: AnyObject]) {
+        
+        let ref = Database.database().reference(fromURL: "https://chatapp-3df90.firebaseio.com/")
+        
+        //creating child reference
+        let userReference = ref.child("users").child(uid)
+        
+        
+        userReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+            
+            if err != nil {
+                print(err)
+                return
+            }
+            //dismiss the view controller when the user is successfully logged in
+            print("Saved to DB!!")
+            self.dismiss(animated: true, completion: nil)
+        })
+    }
+    
+    
+    
 }

@@ -21,7 +21,7 @@ class MessagesController: UITableViewController {
       
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         
-           navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "sms_icon"), style: .plain, target: self, action: #selector(handleNewMessage))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "sms_icon"), style: .plain, target: self, action: #selector(handleNewMessage))
         
         checkIfUserIsLoggedIn()
     }
