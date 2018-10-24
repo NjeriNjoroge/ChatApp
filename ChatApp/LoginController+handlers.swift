@@ -74,8 +74,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             //upload users image to Firebase
             let storageRef = Storage.storage().reference().child("\(imageName).png")
             
-            //create binary data to upload to storage. Firebase requires the binary data: PS metadata is the description of the file you are uploading
-            if let uploadData = self.profileImageView.image!.pngData() {
+            //compress image to reduce amount of time it loads
+            if let uploadData = self.profileImageView.image!.jpegData(compressionQuality: 0.1) {
                 
                 storageRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
                     
@@ -116,7 +116,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             }
             //dismiss the view controller when the user is successfully logged in
             print("Saved to DB!!")
-            self.messageController?.fetchUserAndSetupNavbarTitle()
+            self.messageController?.navigationItem.title = values["name"] as? String
             self.dismiss(animated: true, completion: nil)
         })
     }

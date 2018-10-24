@@ -13,6 +13,8 @@ import FirebaseDatabase
 
 
 class MessagesController: UITableViewController {
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,10 +49,22 @@ class MessagesController: UITableViewController {
         Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             
             if let dictionary = snapshot.value as? [String: AnyObject] {
-                self.navigationItem.title = dictionary["name"] as? String
+                //self.navigationItem.title = dictionary["name"] as? String
+                let user = User()
+                user.setValuesForKeys(dictionary)
+                self.setupNavBarWithUser(user: user)
             }
             
         }, withCancel: nil)
+    }
+    
+    func setupNavBarWithUser(user: User) {
+        //self.navigationItem.title = user.name
+        let titleView = UIView()
+        titleView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
+        titleView.backgroundColor = .red
+        self.navigationItem.titleView = titleView
+        
     }
     
     @objc func handleLogout() {

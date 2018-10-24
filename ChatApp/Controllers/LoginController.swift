@@ -58,6 +58,7 @@ class LoginController: UIViewController {
                 return
             }
             self.messageController?.fetchUserAndSetupNavbarTitle()
+            
             //successfully logged in user.
             self.dismiss(animated: true, completion: nil)
         }
