@@ -13,8 +13,6 @@ import FirebaseDatabase
 
 
 class MessagesController: UITableViewController {
-    
-   
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,16 +36,22 @@ class MessagesController: UITableViewController {
             //handle the warning of presenting too many controllers when the app is starting. Gives it a slight delay
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
         } else {
-            let uid = Auth.auth().currentUser?.uid
-            Database.database().reference().child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
-                
-                if let dictionary = snapshot.value as? [String: AnyObject] {
-                    self.navigationItem.title = dictionary["name"] as? String
-                }
-           
-            }, withCancel: nil)
+            fetchUserAndSetupNavbarTitle()
             }
         }
+    
+    func fetchUserAndSetupNavbarTitle() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                self.navigationItem.title = dictionary["name"] as? String
+            }
+            
+        }, withCancel: nil)
+    }
     
     @objc func handleLogout() {
         
@@ -58,6 +62,7 @@ class MessagesController: UITableViewController {
         }
 
         let loginController = LoginController()
+        loginController.messageController = self
         present(loginController, animated: true, completion: nil)
     }
     

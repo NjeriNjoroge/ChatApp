@@ -92,17 +92,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                         let downloadURL = url?.absoluteString
                         let values = ["name": name, "email": email, "profileImageUrl": downloadURL] as [String : Any]
                         self.registerUserIntoDatabaseWithUID(uid: uid, values: values as [String : AnyObject])
-                       
-                
                     })
-
-                    
-                   
-                    
                 })
-                
             }
-
+            
         })
     }
     
@@ -123,6 +116,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             }
             //dismiss the view controller when the user is successfully logged in
             print("Saved to DB!!")
+            self.messageController?.fetchUserAndSetupNavbarTitle()
             self.dismiss(animated: true, completion: nil)
         })
     }

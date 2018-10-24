@@ -67,6 +67,16 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		8700C13C21804CA400910F60 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				8721AC78216DDB2000914CA5 /* LoginController.swift */,
+				8721AC682167AD9000914CA5 /* MessagesController.swift */,
+				8721AC7C21709F6800914CA5 /* NewMessageController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		8703E5D2217C78F8004B268A /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -105,16 +115,14 @@
 		8721AC652167AD9000914CA5 /* ChatApp */ = {
 			isa = PBXGroup;
 			children = (
-				8703E5D3217C7EF3004B268A /* Helpers */,
 				8721AC662167AD9000914CA5 /* AppDelegate.swift */,
-				8721AC78216DDB2000914CA5 /* LoginController.swift */,
-				8721AC682167AD9000914CA5 /* MessagesController.swift */,
+				8703E5D3217C7EF3004B268A /* Helpers */,
+				8700C13C21804CA400910F60 /* Controllers */,
+				8703E5D2217C78F8004B268A /* Model */,
+				87FFDC9521770E9F00BBC61F /* LoginController+handlers.swift */,
 				8721AC6D2167AD9200914CA5 /* Assets.xcassets */,
 				8721AC6F2167AD9200914CA5 /* LaunchScreen.storyboard */,
 				8721AC722167AD9200914CA5 /* Info.plist */,
-				8721AC7C21709F6800914CA5 /* NewMessageController.swift */,
-				8703E5D2217C78F8004B268A /* Model */,
-				87FFDC9521770E9F00BBC61F /* LoginController+handlers.swift */,
 			);
 			path = ChatApp;
 			sourceTree = "<group>";
