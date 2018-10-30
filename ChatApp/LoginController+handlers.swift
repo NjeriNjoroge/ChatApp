@@ -74,9 +74,9 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             //upload users image to Firebase
             let storageRef = Storage.storage().reference().child("\(imageName).png")
             
-            //compress image to reduce amount of time it loads
-            if let uploadData = self.profileImageView.image!.jpegData(compressionQuality: 0.1) {
-                
+              //compress image to reduce amount of time it loads
+            if let profileImage = self.profileImageView.image, let uploadData = profileImage.jpegData(compressionQuality: 0.1) {
+
                 storageRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
                     
                     if error != nil {
